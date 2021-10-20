@@ -1,30 +1,30 @@
 <template>
   <select
-    @change="onChange"
     v-model="selected"
     class="form-select mt-10 block w-full border p-3 rounded"
+    @change="onChange"
   >
     <option value="0">Select Country</option>
-    <option v-for="country in countries" :value="country.ID">
+    <option v-for="country in countries" :key="country.ID" :value="country.ID">
       {{ country.Country }}
     </option>
   </select>
 </template>
 
 <script>
+import { ref } from "vue";
 export default {
   name: "CountrySelect",
   props: ["countries"],
-  data() {
+  setup({ countries }, { emit }) {
+    const selected = ref(0);
     return {
-      selected: 0,
+      selected,
+      onChange() {
+        const country = countries.find((item) => item.ID === selected.value);
+        emit("get-country", country);
+      },
     };
-  },
-  methods: {
-    onChange() {
-      const country = countries.find((item) => item.ID === selected.value);
-      $emit("get-country", country);
-    },
   },
 };
 </script>
